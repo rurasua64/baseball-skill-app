@@ -1,0 +1,5 @@
+# En la terminal de VS Code
+echo "node_modules/" > .gitignore
+echo ".env" >> .gitignore
+echo ".DS_Store" >> .gitignore
+echo "*.log" >> .gitignore

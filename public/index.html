@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill FanGraphs Baseball - Detector de Discrepancias F5</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚾ Skill FanGraphs Baseball</h1>
+            <p>Algoritmo de Detección de Discrepancias en F5</p>
+        </header>
+
+        <div class="info-section">
+            <h3>📋 Instrucciones rápidas</h3>
+            <ul>
+                <li>Identifica un partido con Caso A (RHP vs LHP) o Caso B (reverse split)</li>
+                <li>Consulta wRC+ del equipo A vs mano del abridor rival en FanGraphs</li>
+                <li>Consulta wRC+ del equipo B vs mano del abridor rival en FanGraphs</li>
+                <li>Determina calidad de abridores (ACE, similar, bottom)</li>
+                <li>Ingresa el momio del equipo que crees tiene ventaja</li>
+            </ul>
+        </div>
+
+        <form id="analysisForm">
+            <div class="form-group">
+                <label>🏆 Equipo A (el que crees con ventaja en split)</label>
+                <input type="text" id="teamA" placeholder="Ej: Washington Nationals" required>
+            </div>
+
+            <div class="form-group">
+                <label>🏆 Equipo B (rival)</label>
+                <input type="text" id="teamB" placeholder="Ej: San Diego Padres" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>📊 wRC+ Equipo A vs mano del SP rival</label>
+                    <input type="number" id="wrcPlusTeamA" placeholder="Ej: 112" required>
+                    <small>Ejemplo: WSH vs RHP = 112</small>
+                </div>
+
+                <div class="form-group">
+                    <label>📊 wRC+ Equipo B vs mano del SP rival</label>
+                    <input type="number" id="wrcPlusTeamB" placeholder="Ej: 82" required>
+                    <small>Ejemplo: SDP vs LHP = 82</small>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>⭐ Calidad del abridor del Equipo A</label>
+                    <select id="pitcherAType">
+                        <option value="similar">Similar / Promedio</option>
+                        <option value="ace">Ace / Élite</option>
+                        <option value="bottom">Bottom / Streamer (Malo)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>⭐ Calidad del abridor del Equipo B</label>
+                    <select id="pitcherBType">
+                        <option value="similar">Similar / Promedio</option>
+                        <option value="ace">Ace / Élite</option>
+                        <option value="bottom">Bottom / Streamer (Malo)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>💰 Momio del Equipo A (en tu casa de apuestas)</label>
+                <input type="text" id="teamAPays" placeholder="Ej: +100, -110, +150" required>
+                <small>Usa formato americano (+100, -110, etc)</small>
+            </div>
+
+            <button type="submit" class="btn-analyze">🔍 Analizar Gatillo</button>
+        </form>
+
+        <div id="result" class="result hidden">
+            <h2>📈 Resultado del Análisis</h2>
+            <div id="resultContent"></div>
+        </div>
+
+        <div class="example-box">
+            <h4>📌 Ejemplo práctico (Washington vs San Diego)</h4>
+            <p><strong>Datos ingresados:</strong><br>
+            Equipo A: Washington Nationals | wRC+: 112<br>
+            Equipo B: San Diego Padres | wRC+: 82<br>
+            Abridores: Ambos similares | Momio: +100<br>
+            <strong>Resultado:</strong> IVN = +30 → Discrepancia Crítica → GATILLO ACTIVADO ✅</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

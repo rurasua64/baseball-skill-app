@@ -1,0 +1,11 @@
+
+## Instrucciones de despliegue en GitHub
+
+```bash
+# Crear repositorio en GitHub y luego:
+git init
+git add .
+git commit -m "Initial commit: Baseball skill app"
+git branch -M main
+git remote add origin https://github.com/tuusuario/baseball-skill-app.git
+git push -u origin main
