@@ -12,7 +12,7 @@ body {
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
     background: white;
     border-radius: 20px;
@@ -23,139 +23,255 @@ body {
 header {
     background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
     color: white;
-    padding: 30px;
+    padding: 25px 30px;
     text-align: center;
 }
 
 header h1 {
-    font-size: 2em;
-    margin-bottom: 10px;
-}
-
-.info-section {
-    background: #ecf0f1;
-    padding: 20px 30px;
-    border-bottom: 1px solid #bdc3c7;
-}
-
-.info-section h3 {
-    color: #2c3e50;
-    margin-bottom: 10px;
-}
-
-.info-section ul {
-    margin-left: 20px;
-    color: #34495e;
-}
-
-.info-section li {
-    margin: 8px 0;
-}
-
-form {
-    padding: 30px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    color: #2c3e50;
+    font-size: 1.8em;
     margin-bottom: 8px;
 }
 
-input, select {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #bdc3c7;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: border-color 0.3s;
+header p {
+    opacity: 0.9;
+    font-size: 0.95em;
 }
 
-input:focus, select:focus {
-    outline: none;
-    border-color: #e74c3c;
+/* Date selector */
+.date-selector {
+    padding: 20px 30px;
+    background: #f8f9fa;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 1px solid #dee2e6;
+    flex-wrap: wrap;
 }
 
-small {
-    display: block;
-    color: #7f8c8d;
-    margin-top: 5px;
-    font-size: 12px;
+.date-selector label {
+    font-weight: bold;
+    color: #2c3e50;
 }
 
-.btn-analyze {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+.date-selector input {
+    width: auto;
+    flex: 0 0 auto;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+}
+
+.btn-small {
+    background: #6c757d;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 14px;
+    transition: background 0.2s;
+    width: auto;
 }
 
-.btn-analyze:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(46,204,113,0.3);
+.btn-small:hover {
+    background: #5a6268;
 }
 
+/* Partidos lista */
+.partidos-lista {
+    padding: 20px 30px;
+}
+
+.partidos-lista h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.lista-container {
+    min-height: 200px;
+}
+
+.partidos-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.partido-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 18px;
+    transition: box-shadow 0.2s, transform 0.1s;
+}
+
+.partido-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.partido-equipos {
+    font-size: 1.1em;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.partido-equipos strong {
+    color: #c0392b;
+}
+
+.partido-abridores {
+    color: #6c757d;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+}
+
+.partido-stats {
+    font-size: 0.85em;
+    color: #495057;
+    margin-bottom: 12px;
+    background: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.btn-analizar {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-analizar:hover {
+    background: #219a52;
+}
+
+/* Loading y estados */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+}
+
+.no-games, .error {
+    text-align: center;
+    padding: 40px;
+    background: #f8d7da;
+    border-radius: 8px;
+    color: #721c24;
+}
+
+/* Resultado del análisis */
 .result {
     margin: 0 30px 30px 30px;
-    padding: 20px;
-    border-radius: 12px;
-    animation: slideIn 0.5s ease;
 }
 
-.result h2 {
+.result.hidden {
+    display: none;
+}
+
+.resultado-card {
+    padding: 25px;
+    border-radius: 12px;
+    animation: slideIn 0.3s ease;
+}
+
+.gatillo-activo {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border: 2px solid #28a745;
+}
+
+.gatillo-inactivo {
+    background: #f8d7da;
+    border: 2px solid #dc3545;
+}
+
+.resultado-card h3 {
     margin-bottom: 15px;
     color: #2c3e50;
 }
 
-.result-content {
-    line-height: 1.6;
-}
-
-.gatillo-activado {
-    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-    border: 2px solid #28a745;
-    color: #155724;
-}
-
-.gatillo-no {
-    background: #f8d7da;
-    border: 2px solid #dc3545;
-    color: #721c24;
-}
-
-.example-box {
-    background: #fff3cd;
-    border-left: 4px solid #ffc107;
-    padding: 15px;
-    margin: 20px 30px 30px 30px;
+.resultado-ivn {
+    font-size: 1.4em;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(0,0,0,0.05);
     border-radius: 8px;
+    text-align: center;
 }
 
-.example-box h4 {
-    color: #856404;
-    margin-bottom: 10px;
+.resultado-ivn strong {
+    font-size: 1.2em;
+    color: #2c3e50;
 }
 
-.hidden {
-    display: none;
+.resultado-clasificacion, .resultado-accion {
+    margin: 10px 0;
+    padding: 8px 0;
+}
+
+.resultado-gatillo {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.verde {
+    background: #28a745;
+    color: white;
+}
+
+.rojo {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-cerrar {
+    margin-top: 15px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+}
+
+.btn-cerrar:hover {
+    background: #5a6268;
+}
+
+/* Footer info */
+.info-footer {
+    background: #ecf0f1;
+    padding: 20px 30px;
+    border-top: 1px solid #bdc3c7;
+}
+
+.info-footer h4 {
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.info-footer p {
+    color: #34495e;
+    font-size: 0.85em;
+    margin: 5px 0;
+}
+
+.info-footer a {
+    color: #c0392b;
+    text-decoration: none;
+}
+
+.info-footer a:hover {
+    text-decoration: underline;
 }
 
 @keyframes slideIn {
@@ -170,11 +286,21 @@ small {
 }
 
 @media (max-width: 600px) {
-    .form-row {
-        grid-template-columns: 1fr;
+    .container {
+        margin: 0;
+        border-radius: 0;
     }
     
-    header h1 {
-        font-size: 1.5em;
+    body {
+        padding: 0;
+    }
+    
+    .date-selector {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .date-selector input, .btn-small {
+        width: 100%;
     }
 }

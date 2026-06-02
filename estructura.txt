@@ -1,6 +1,8 @@
 baseball-skill-app/
 ├── package.json
 ├── server.js
+├── data/
+│   └── games.json
 ├── public/
 │   ├── index.html
 │   ├── style.css

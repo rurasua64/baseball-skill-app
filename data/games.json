@@ -1,0 +1,18 @@
+{
+  "fecha": "2026-06-02",
+  "partidos": [
+    {
+      "equipoA": "Washington Nationals",
+      "equipoB": "San Diego Padres",
+      "abridorA": "King",
+      "abridorB": "Griffin",
+      "manoA": "RHP",
+      "manoB": "LHP",
+      "wrcEquipoA_vs_SPB": 112,
+      "wrcEquipoB_vs_SPA": 82,
+      "calidadA": "similar",
+      "calidadB": "similar",
+      "momioA": "+100"
+    }
+  ]
+}
