@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skill FanGraphs - Detector MLB F5</title>
+    <title>Analisis MLB - Ruben Ramirez</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,11 +13,14 @@
             <p>Detección de Discrepancias hasta 5ta entrada - Partidos del día</p>
         </header>
 
-        <!-- Selector de fecha -->
-        <div class="date-selector">
-            <label>📅 Fecha:</label>
-            <input type="date" id="fechaInput">
-            <button id="cargarPartidosBtn" class="btn-small">🔄 Cargar partidos</button>
+        <!-- Info de fecha - ahora viene del JSON -->
+        <div class="date-info">
+            <div class="date-badge">
+                📅 <strong>Fecha:</strong> <span id="fechaPartidos">Cargando...</span>
+            </div>
+            <button id="refrescarBtn" class="btn-refrescar" onclick="refrescarPartidos()">
+                🔄 Refrescar partidos
+            </button>
         </div>
 
         <!-- Lista de partidos del día -->

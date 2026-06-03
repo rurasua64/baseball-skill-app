@@ -1,306 +1,66 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    min-height: 100vh;
-    padding: 20px;
-}
-
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    overflow: hidden;
-}
-
-header {
-    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+/* Date info section */
+.date-info {
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
     color: white;
-    padding: 25px 30px;
-    text-align: center;
-}
-
-header h1 {
-    font-size: 1.8em;
-    margin-bottom: 8px;
-}
-
-header p {
-    opacity: 0.9;
-    font-size: 0.95em;
-}
-
-/* Date selector */
-.date-selector {
-    padding: 20px 30px;
-    background: #f8f9fa;
     display: flex;
-    gap: 12px;
+    justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #dee2e6;
     flex-wrap: wrap;
-}
-
-.date-selector label {
-    font-weight: bold;
-    color: #2c3e50;
-}
-
-.date-selector input {
-    width: auto;
-    flex: 0 0 auto;
-    padding: 8px 12px;
-    border: 1px solid #ced4da;
-    border-radius: 6px;
-}
-
-.btn-small {
-    background: #6c757d;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.2s;
-    width: auto;
-}
-
-.btn-small:hover {
-    background: #5a6268;
-}
-
-/* Partidos lista */
-.partidos-lista {
-    padding: 20px 30px;
-}
-
-.partidos-lista h3 {
-    color: #2c3e50;
-    margin-bottom: 15px;
-}
-
-.lista-container {
-    min-height: 200px;
-}
-
-.partidos-grid {
-    display: flex;
-    flex-direction: column;
     gap: 15px;
 }
 
-.partido-card {
-    background: white;
-    border: 1px solid #dee2e6;
-    border-radius: 12px;
-    padding: 18px;
-    transition: box-shadow 0.2s, transform 0.1s;
-}
-
-.partido-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.partido-equipos {
+.date-badge {
     font-size: 1.1em;
-    margin-bottom: 8px;
-    color: #2c3e50;
 }
 
-.partido-equipos strong {
-    color: #c0392b;
-}
-
-.partido-abridores {
-    color: #6c757d;
-    font-size: 0.9em;
-    margin-bottom: 8px;
-}
-
-.partido-stats {
-    font-size: 0.85em;
-    color: #495057;
-    margin-bottom: 12px;
-    background: #f8f9fa;
-    padding: 8px 12px;
-    border-radius: 6px;
-}
-
-.btn-analizar {
-    background: #27ae60;
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.2s;
-}
-
-.btn-analizar:hover {
-    background: #219a52;
-}
-
-/* Loading y estados */
-.loading {
-    text-align: center;
-    padding: 40px;
-    color: #6c757d;
-}
-
-.no-games, .error {
-    text-align: center;
-    padding: 40px;
-    background: #f8d7da;
-    border-radius: 8px;
-    color: #721c24;
-}
-
-/* Resultado del análisis */
-.result {
-    margin: 0 30px 30px 30px;
-}
-
-.result.hidden {
-    display: none;
-}
-
-.resultado-card {
-    padding: 25px;
-    border-radius: 12px;
-    animation: slideIn 0.3s ease;
-}
-
-.gatillo-activo {
-    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-    border: 2px solid #28a745;
-}
-
-.gatillo-inactivo {
-    background: #f8d7da;
-    border: 2px solid #dc3545;
-}
-
-.resultado-card h3 {
-    margin-bottom: 15px;
-    color: #2c3e50;
-}
-
-.resultado-ivn {
-    font-size: 1.4em;
-    margin: 15px 0;
-    padding: 10px;
-    background: rgba(0,0,0,0.05);
-    border-radius: 8px;
-    text-align: center;
-}
-
-.resultado-ivn strong {
-    font-size: 1.2em;
-    color: #2c3e50;
-}
-
-.resultado-clasificacion, .resultado-accion {
-    margin: 10px 0;
-    padding: 8px 0;
-}
-
-.resultado-gatillo {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 8px;
-    text-align: center;
+.date-badge strong {
     font-weight: bold;
 }
 
-.verde {
-    background: #28a745;
+.btn-refrescar {
+    background: rgba(255,255,255,0.2);
     color: white;
-}
-
-.rojo {
-    background: #dc3545;
-    color: white;
-}
-
-.btn-cerrar {
-    margin-top: 15px;
-    background: #6c757d;
-    color: white;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.3);
     padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
-    width: 100%;
+    transition: all 0.2s;
+    width: auto;
 }
 
-.btn-cerrar:hover {
-    background: #5a6268;
+.btn-refrescar:hover {
+    background: rgba(255,255,255,0.3);
 }
 
-/* Footer info */
-.info-footer {
-    background: #ecf0f1;
-    padding: 20px 30px;
-    border-top: 1px solid #bdc3c7;
+/* Partido header con tipos de caso */
+.partido-header {
+    margin-bottom: 10px;
 }
 
-.info-footer h4 {
-    color: #2c3e50;
-    margin-bottom: 8px;
+.caso-a {
+    background: #d4edda;
+    color: #155724;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75em;
+    font-weight: bold;
 }
 
-.info-footer p {
-    color: #34495e;
-    font-size: 0.85em;
-    margin: 5px 0;
+.caso-b {
+    background: #fff3cd;
+    color: #856404;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75em;
+    font-weight: bold;
 }
 
-.info-footer a {
-    color: #c0392b;
-    text-decoration: none;
-}
-
-.info-footer a:hover {
-    text-decoration: underline;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media (max-width: 600px) {
-    .container {
-        margin: 0;
-        border-radius: 0;
-    }
-    
-    body {
-        padding: 0;
-    }
-    
-    .date-selector {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .date-selector input, .btn-small {
-        width: 100%;
-    }
+.partido-calidad {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin: 8px 0;
+    padding: 5px 0;
+    border-top: 1px dashed #dee2e6;
 }

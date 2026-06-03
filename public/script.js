@@ -1,17 +1,18 @@
-// Configurar fecha por defecto (hoy)
+// Variables globales
+let fechaActual = '';
+let partidosActuales = [];
+
+// Configurar al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
-    const hoy = new Date().toISOString().split('T')[0];
-    document.getElementById('fechaInput').value = hoy;
     cargarPartidos();
 });
 
-document.getElementById('cargarPartidosBtn').addEventListener('click', () => {
-    cargarPartidos();
-});
+// Eliminar el selector de fecha manual - ya no es necesario
+// Ya no hay event listener para cargarPartidosBtn porque la fecha viene del JSON
 
 async function cargarPartidos() {
-    const fecha = document.getElementById('fechaInput').value;
     const listaContainer = document.getElementById('listaContainer');
+    const fechaElement = document.getElementById('fechaPartidos');
     
     listaContainer.innerHTML = '<div class="loading">🔄 Cargando partidos...</div>';
     
@@ -20,22 +21,43 @@ async function cargarPartidos() {
         const data = await response.json();
         
         if (data.partidos && data.partidos.length > 0) {
-            mostrarPartidos(data.partidos, data.fecha);
+            fechaActual = data.fecha;
+            partidosActuales = data.partidos;
+            
+            // Actualizar la fecha mostrada
+            if (fechaElement) {
+                const fechaFormateada = formatearFecha(fechaActual);
+                fechaElement.textContent = fechaFormateada;
+            }
+            
+            mostrarPartidos(data.partidos);
         } else {
             listaContainer.innerHTML = `
                 <div class="no-games">
-                    📭 No hay partidos programados para ${fecha}<br><br>
-                    <small>Edita el archivo <strong>data/games.json</strong> para agregar los partidos del día.</small>
+                    📭 No hay partidos cargados<br><br>
+                    <small>El archivo <strong>data/games.json</strong> está vacío o no existe.</small>
                 </div>
             `;
+            if (fechaElement) fechaElement.textContent = 'No disponible';
         }
     } catch (error) {
         console.error('Error:', error);
         listaContainer.innerHTML = '<div class="error">❌ Error al cargar los partidos. Verifica que el servidor esté funcionando.</div>';
+        if (fechaElement) fechaElement.textContent = 'Error';
     }
 }
 
-function mostrarPartidos(partidos, fecha) {
+// Función para formatear fecha de YYYY-MM-DD a DD/MM/YYYY
+function formatearFecha(fechaISO) {
+    if (!fechaISO) return 'No disponible';
+    const partes = fechaISO.split('-');
+    if (partes.length === 3) {
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+    return fechaISO;
+}
+
+function mostrarPartidos(partidos) {
     const listaContainer = document.getElementById('listaContainer');
     
     if (partidos.length === 0) {
@@ -50,17 +72,32 @@ function mostrarPartidos(partidos, fecha) {
         const equipoANombre = partido.equipoA.split(' ').pop() || partido.equipoA;
         const equipoBNombre = partido.equipoB.split(' ').pop() || partido.equipoB;
         
+        // Determinar el tipo de caso (Caso A o Caso B)
+        let tipoCaso = '';
+        if (partido.manoA !== partido.manoB) {
+            tipoCaso = '<span class="caso-a">🎯 Caso A: Diferente mano</span>';
+        } else {
+            tipoCaso = '<span class="caso-b">📊 Caso B: Misma mano - Reverse Split?</span>';
+        }
+        
         html += `
             <div class="partido-card" data-index="${index}">
+                <div class="partido-header">
+                    ${tipoCaso}
+                </div>
                 <div class="partido-equipos">
                     🏆 <strong>${partido.equipoA}</strong> vs <strong>${partido.equipoB}</strong>
                 </div>
                 <div class="partido-abridores">
-                    🧢 Abridores: ${partido.abridorA} (${partido.manoA}) vs ${partido.abridorB} (${partido.manoB})
+                    🧢 ${partido.abridorA} (${partido.manoA}) vs ${partido.abridorB} (${partido.manoB})
                 </div>
                 <div class="partido-stats">
                     📊 <strong>${equipoANombre}</strong> vs ${partido.manoB}: ${partido.wrcEquipoA_vs_SPB} wRC+ &nbsp;|&nbsp;
                     <strong>${equipoBNombre}</strong> vs ${partido.manoA}: ${partido.wrcEquipoB_vs_SPA} wRC+
+                </div>
+                <div class="partido-calidad">
+                    ⭐ ${partido.equipoA.split(' ').pop()}: ${getCalidadTexto(partido.calidadA)} &nbsp;|&nbsp;
+                    ⭐ ${partido.equipoB.split(' ').pop()}: ${getCalidadTexto(partido.calidadB)}
                 </div>
                 <button class="btn-analizar" data-partido='${JSON.stringify(partido)}'>
                     🔍 Analizar este partido
@@ -79,6 +116,14 @@ function mostrarPartidos(partidos, fecha) {
             analizarPartido(partido);
         });
     });
+}
+
+function getCalidadTexto(calidad) {
+    switch(calidad) {
+        case 'ace': return 'ACE/Élite 👑';
+        case 'bottom': return 'Bottom/Malo ⚠️';
+        default: return 'Promedio/Similar 📊';
+    }
 }
 
 async function analizarPartido(partido) {
@@ -160,4 +205,9 @@ function mostrarResultado(data) {
     `;
     
     resultadoDiv.innerHTML = html;
+}
+
+// Función para refrescar (opcional)
+function refrescarPartidos() {
+    cargarPartidos();
 }
