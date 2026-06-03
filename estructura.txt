@@ -6,5 +6,6 @@ baseball-skill-app/
 ├── public/
 │   ├── index.html
 │   ├── style.css
-│   └── script.js
+│   ├── app.js
+│   └── analytics.js (nuevo - para el modo Totales)
 └── README.md

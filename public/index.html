@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Analisis MLB - Ruben Ramirez</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚾</text></svg>">
@@ -15,6 +14,12 @@
             <h1>⚾ Analisis MLB</h1>
             <p>Detección de Discrepancias hasta 5ta entrada</p>
         </header>
+
+        <!-- Selector de modo -->
+        <div class="modo-selector">
+            <button class="modo-btn active" data-modo="ganador">🏆 Modo Ganador F5</button>
+            <button class="modo-btn" data-modo="totales">📊 Modo Totales F5</button>
+        </div>
 
         <div class="date-info">
             <div class="date-badge">
@@ -37,11 +42,11 @@
         <div class="info-footer">
             <h4>⚠️ Aviso importante</h4>
             <p>Esto es en apoyo para que recuperes, por favor no lo divulgues mucho</p>
-            <p>📱 Sígueme en <a href="https://x.com/MaxHeadroomDice" target="_blank">X (antes Twitter)</a></p>
+            <p>📱 Sígueme en <a href="https://twitter.com/tu_usuario" target="_blank">X (antes Twitter)</a></p>
             <p>📊 Datos de <a href="https://www.fangraphs.com/leaders/splits-leaderboards" target="_blank">FanGraphs</a></p>
         </div>
     </div>
 
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=4"></script>
 </body>
 </html>
