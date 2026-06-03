@@ -13,19 +13,6 @@
       "calidadA": "similar",
       "calidadB": "similar",
       "momioA": "+100"
-    },
-    {
-      "equipoA": "Los Angeles Dodgers",
-      "equipoB": "San Francisco Giants",
-      "abridorA": "Yamamoto",
-      "abridorB": "Webb",
-      "manoA": "RHP",
-      "manoB": "RHP",
-      "wrcEquipoA_vs_SPB": 118,
-      "wrcEquipoB_vs_SPA": 95,
-      "calidadA": "ace",
-      "calidadB": "similar",
-      "momioA": "-120"
     }
   ]
 }
