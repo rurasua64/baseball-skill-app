@@ -7,14 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarPartidos();
 });
 
-// Eliminar el selector de fecha manual - ya no es necesario
-// Ya no hay event listener para cargarPartidosBtn porque la fecha viene del JSON
-
 async function cargarPartidos() {
     const listaContainer = document.getElementById('listaContainer');
     const fechaElement = document.getElementById('fechaPartidos');
     
-    listaContainer.innerHTML = '<div class="loading">🔄 Cargando partidos...</div>';
+    if (listaContainer) {
+        listaContainer.innerHTML = '<div class="loading">🔄 Cargando partidos...</div>';
+    }
     
     try {
         const response = await fetch('/api/games');
@@ -32,17 +31,21 @@ async function cargarPartidos() {
             
             mostrarPartidos(data.partidos);
         } else {
-            listaContainer.innerHTML = `
-                <div class="no-games">
-                    📭 No hay partidos cargados<br><br>
-                    <small>El archivo <strong>data/games.json</strong> está vacío o no existe.</small>
-                </div>
-            `;
+            if (listaContainer) {
+                listaContainer.innerHTML = `
+                    <div class="no-games">
+                        📭 No hay partidos cargados<br><br>
+                        <small>El archivo <strong>data/games.json</strong> está vacío o no existe.</small>
+                    </div>
+                `;
+            }
             if (fechaElement) fechaElement.textContent = 'No disponible';
         }
     } catch (error) {
         console.error('Error:', error);
-        listaContainer.innerHTML = '<div class="error">❌ Error al cargar los partidos. Verifica que el servidor esté funcionando.</div>';
+        if (listaContainer) {
+            listaContainer.innerHTML = '<div class="error">❌ Error al cargar los partidos. Verifica que el servidor esté funcionando.</div>';
+        }
         if (fechaElement) fechaElement.textContent = 'Error';
     }
 }
@@ -59,6 +62,8 @@ function formatearFecha(fechaISO) {
 
 function mostrarPartidos(partidos) {
     const listaContainer = document.getElementById('listaContainer');
+    
+    if (!listaContainer) return;
     
     if (partidos.length === 0) {
         listaContainer.innerHTML = '<div class="no-games">No hay partidos para esta fecha</div>';
@@ -86,20 +91,20 @@ function mostrarPartidos(partidos) {
                     ${tipoCaso}
                 </div>
                 <div class="partido-equipos">
-                    🏆 <strong>${partido.equipoA}</strong> vs <strong>${partido.equipoB}</strong>
+                    🏆 <strong>${escapeHTML(partido.equipoA)}</strong> vs <strong>${escapeHTML(partido.equipoB)}</strong>
                 </div>
                 <div class="partido-abridores">
-                    🧢 ${partido.abridorA} (${partido.manoA}) vs ${partido.abridorB} (${partido.manoB})
+                    🧢 ${escapeHTML(partido.abridorA)} (${partido.manoA}) vs ${escapeHTML(partido.abridorB)} (${partido.manoB})
                 </div>
                 <div class="partido-stats">
                     📊 <strong>${equipoANombre}</strong> vs ${partido.manoB}: ${partido.wrcEquipoA_vs_SPB} wRC+ &nbsp;|&nbsp;
                     <strong>${equipoBNombre}</strong> vs ${partido.manoA}: ${partido.wrcEquipoB_vs_SPA} wRC+
                 </div>
                 <div class="partido-calidad">
-                    ⭐ ${partido.equipoA.split(' ').pop()}: ${getCalidadTexto(partido.calidadA)} &nbsp;|&nbsp;
-                    ⭐ ${partido.equipoB.split(' ').pop()}: ${getCalidadTexto(partido.calidadB)}
+                    ⭐ ${equipoANombre}: ${getCalidadTexto(partido.calidadA)} &nbsp;|&nbsp;
+                    ⭐ ${equipoBNombre}: ${getCalidadTexto(partido.calidadB)}
                 </div>
-                <button class="btn-analizar" data-partido='${JSON.stringify(partido)}'>
+                <button class="btn-analizar" data-partido='${escapeHTML(JSON.stringify(partido))}'>
                     🔍 Analizar este partido
                 </button>
             </div>
@@ -118,6 +123,16 @@ function mostrarPartidos(partidos) {
     });
 }
 
+function escapeHTML(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
 function getCalidadTexto(calidad) {
     switch(calidad) {
         case 'ace': return 'ACE/Élite 👑';
@@ -128,6 +143,8 @@ function getCalidadTexto(calidad) {
 
 async function analizarPartido(partido) {
     const resultadoDiv = document.getElementById('resultadoAnalisis');
+    if (!resultadoDiv) return;
+    
     resultadoDiv.classList.remove('hidden');
     resultadoDiv.innerHTML = '<div class="loading">🔍 Analizando con el algoritmo FanGraphs...</div>';
     
@@ -165,6 +182,8 @@ async function analizarPartido(partido) {
 
 function mostrarResultado(data) {
     const resultadoDiv = document.getElementById('resultadoAnalisis');
+    if (!resultadoDiv) return;
+    
     const isGatillo = data.gatillo.activado;
     const ivn = data.calculos.ivn;
     
@@ -173,7 +192,7 @@ function mostrarResultado(data) {
     
     const html = `
         <div class="resultado-card ${colorClass}">
-            <h3>${icono} ${data.equipoA} vs ${data.equipoB}</h3>
+            <h3>${icono} ${escapeHTML(data.equipoA)} vs ${escapeHTML(data.equipoB)}</h3>
             
             <div class="resultado-ivn">
                 <strong>📐 Índice de Ventaja Neta (IVN) = ${ivn}</strong><br>
@@ -211,3 +230,6 @@ function mostrarResultado(data) {
 function refrescarPartidos() {
     cargarPartidos();
 }
+
+// Exponer funciones globales para el HTML
+window.refrescarPartidos = refrescarPartidos;
