@@ -1,29 +1,37 @@
-// Versión simplificada y robusta - sin errores de null
+// app.js - Versión limpia sin errores
 (function() {
     'use strict';
     
-    console.log('Script cargado correctamente');
+    console.log('App v2 - Cargada correctamente');
     
     // Esperar a que el DOM esté listo
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', iniciarApp);
-    } else {
-        iniciarApp();
+    function iniciar() {
+        console.log('Iniciando aplicación...');
+        cargarPartidos();
+        
+        // Botón refrescar
+        const btnRefrescar = document.getElementById('refrescarBtn');
+        if (btnRefrescar) {
+            btnRefrescar.addEventListener('click', function() {
+                cargarPartidos();
+            });
+        }
     }
     
-    function iniciarApp() {
-        console.log('DOM listo, iniciando app...');
-        cargarPartidos();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', iniciar);
+    } else {
+        iniciar();
     }
     
     async function cargarPartidos() {
+        console.log('Cargando partidos...');
+        
         const listaContainer = document.getElementById('listaContainer');
         const fechaElement = document.getElementById('fechaPartidos');
         
-        console.log('Cargando partidos...');
-        
         if (listaContainer) {
-            listaContainer.innerHTML = '<div class="loading">🔄 Cargando partidos desde FanGraphs...</div>';
+            listaContainer.innerHTML = '<div class="loading">🔄 Cargando partidos...</div>';
         }
         
         try {
@@ -32,7 +40,7 @@
             
             console.log('Datos recibidos:', data);
             
-            if (data.partidos && data.partidos.length > 0) {
+            if (data && data.partidos && data.partidos.length > 0) {
                 if (fechaElement) {
                     fechaElement.textContent = formatearFecha(data.fecha);
                 }
@@ -41,14 +49,18 @@
                 if (listaContainer) {
                     listaContainer.innerHTML = '<div class="no-games">📭 No hay partidos cargados. Actualiza games.json</div>';
                 }
-                if (fechaElement) fechaElement.textContent = 'No disponible';
+                if (fechaElement) {
+                    fechaElement.textContent = 'No disponible';
+                }
             }
         } catch (error) {
             console.error('Error:', error);
             if (listaContainer) {
                 listaContainer.innerHTML = '<div class="error">❌ Error al cargar partidos</div>';
             }
-            if (fechaElement) fechaElement.textContent = 'Error';
+            if (fechaElement) {
+                fechaElement.textContent = 'Error';
+            }
         }
     }
     
@@ -83,6 +95,10 @@
                         📊 ${equipoANombre} vs ${partido.manoB}: ${partido.wrcEquipoA_vs_SPB} wRC+ | 
                         ${equipoBNombre} vs ${partido.manoA}: ${partido.wrcEquipoB_vs_SPA} wRC+
                     </div>
+                    <div class="partido-calidad">
+                        ⭐ ${equipoANombre}: ${getCalidadTexto(partido.calidadA)} | 
+                        ⭐ ${equipoBNombre}: ${getCalidadTexto(partido.calidadB)}
+                    </div>
                     <button class="btn-analizar" data-partido='${escapeHtml(JSON.stringify(partido))}'>
                         🔍 Analizar este partido
                     </button>
@@ -93,9 +109,9 @@
         html += '</div>';
         listaContainer.innerHTML = html;
         
-        // Agregar event listeners
+        // Agregar event listeners a los botones
         document.querySelectorAll('.btn-analizar').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function(e) {
                 const partido = JSON.parse(this.dataset.partido);
                 analizarPartido(partido);
             });
@@ -104,7 +120,7 @@
     
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
+        return String(str).replace(/[&<>]/g, function(m) {
             if (m === '&') return '&amp;';
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
@@ -112,12 +128,24 @@
         });
     }
     
+    function getCalidadTexto(calidad) {
+        switch(calidad) {
+            case 'ace': return 'ACE/Élite 👑';
+            case 'bottom': return 'Bottom/Malo ⚠️';
+            default: return 'Promedio/Similar 📊';
+        }
+    }
+    
     async function analizarPartido(partido) {
+        console.log('Analizando partido:', partido);
+        
         const resultadoDiv = document.getElementById('resultadoAnalisis');
         if (!resultadoDiv) return;
         
         resultadoDiv.classList.remove('hidden');
-        resultadoDiv.innerHTML = '<div class="loading">🔍 Analizando...</div>';
+        resultadoDiv.innerHTML = '<div class="loading">🔍 Analizando con algoritmo FanGraphs...</div>';
+        
+        resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         
         try {
             const response = await fetch('/api/analyze', {
@@ -137,7 +165,8 @@
             const resultado = await response.json();
             mostrarResultado(resultado);
         } catch (error) {
-            resultadoDiv.innerHTML = '<div class="error">❌ Error al analizar</div>';
+            console.error('Error:', error);
+            resultadoDiv.innerHTML = '<div class="error">❌ Error al analizar el partido</div>';
         }
     }
     
@@ -146,26 +175,25 @@
         if (!resultadoDiv) return;
         
         const isGatillo = data.gatillo.activado;
+        const ivn = data.calculos.ivn;
         
         resultadoDiv.innerHTML = `
             <div class="resultado-card ${isGatillo ? 'gatillo-activo' : 'gatillo-inactivo'}">
-                <h3>${isGatillo ? '🔥' : '⏸️'} ${data.equipoA} vs ${data.equipoB}</h3>
+                <h3>${isGatillo ? '🔥' : '⏸️'} ${escapeHtml(data.equipoA)} vs ${escapeHtml(data.equipoB)}</h3>
                 <div class="resultado-ivn">
-                    <strong>📐 IVN = ${data.calculos.ivn}</strong>
+                    <strong>📐 Índice de Ventaja Neta (IVN) = ${ivn}</strong>
+                    <br><small>(${data.calculos.difOfensivo} dif. ofensivo + ${data.calculos.ajusteSP} ajuste SP)</small>
                 </div>
-                <div><strong>Clasificación:</strong> ${data.clasificacion}</div>
-                <div><strong>Acción:</strong> ${data.accion}</div>
+                <div><strong>📊 Clasificación:</strong> ${data.clasificacion}</div>
+                <div><strong>🎯 Acción:</strong> ${data.accion}</div>
                 <div class="resultado-gatillo ${isGatillo ? 'verde' : 'rojo'}">
                     ${data.recomendacion}
                 </div>
                 <button class="btn-cerrar" onclick="this.closest('.result').classList.add('hidden')">
-                    Cerrar
+                    ✖️ Cerrar análisis
                 </button>
             </div>
         `;
     }
-    
-    // Función global para refrescar
-    window.refrescarPartidos = cargarPartidos;
     
 })();
